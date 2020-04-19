@@ -425,9 +425,9 @@ function createPickUp(xPos,zPos) {
   mesh.position.z = camera.position.z-zPos;
   // add the mesh to the scene object
   collectibleMeshList.push(mesh);
-  scene.add(mesh);*/
+  scene.add(mesh);
 
-  createModel("./modelos/Drop/", "Drop.mtl", "Drop.obj", "Pickup".pickupNum);
+  createModel("./modelos/Drop/", "Drop.mtl", "Drop.obj", "Pickup"+pickupNum);
   pickupNum += 1;
 }
 // ----------------------------------
