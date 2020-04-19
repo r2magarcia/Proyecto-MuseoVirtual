@@ -29,7 +29,10 @@ var scale  = 1;
 var rotSpd = 0.05;
 var spd    = 0.05;
 var input  = {left:0,right:0, up: 0, down: 0};
+var pickupCreated = null;
+var modelpick = null;
 var pickupNum = 0;
+var posiblePos = [10,13,2,5,-5,1,15,1,16,-3,-13,-4,21,1];
 
 var posX = 3;
 var posY = 0.5;
@@ -59,7 +62,7 @@ function initScene(){
     createPlayerMove();
     createFrontera();
     initGUI();
-    createMultiplyPick(numberToCreate);
+    createMultiplyPick();
 }
 
 function animate(){
@@ -125,19 +128,24 @@ function createModel(generalPath,pathMtl,pathObj,whatTodraw) {
           break;
 
           case "player":
-                    modelPlay = object;
-                    figuresGeo.push(modelPlay);
+            modelPlay = object;
+            figuresGeo.push(modelPlay);
 
-                    object.scale.set(0.003, 0.003, 0.003);
-                    object.position.x = MovingCube.position.x;
-                    object.position.y = MovingCube.position.y - 0.3;
-                    object.position.z = MovingCube.position.z - 0.4;
-                    object.rotation.y = Math.PI / 2 + Math.PI / 2;
-                    player = object;
-                    console.log("Player creado");
-                    scene.add(player);
-                    playerCreated = true;
-                    break;
+            object.scale.set(0.003, 0.003, 0.003);
+            object.position.x = MovingCube.position.x;
+            object.position.y = MovingCube.position.y - 0.3;
+            object.position.z = MovingCube.position.z - 0.4;
+            object.rotation.y = Math.PI / 2 + Math.PI / 2;
+            player = object;
+            console.log("Player creado");
+            scene.add(player);
+            playerCreated = true;
+          break;
+
+          case "pickup":
+            modelpick = object;
+            object.position.set()
+
         }
             scene.add(object);
         });
@@ -384,14 +392,14 @@ function showInfoCreator() {
 
 }
 
-function createMultiplyPick(factor2Create) {
-  xPos = getRandomArbitrary(0,10);
-  zPos = getRandomArbitrary(-5,6);
-
-  for(k=0;k<factor2Create;k++){
-      createPickUp(xPos,zPos);
-      xPos = getRandomArbitrary(0,10);
-      zPos = getRandomArbitrary(-5,6);
+function createMultiplyPick() {
+  var xPos = 0
+  var yPos = 0
+  //10,13,2,5,-5,1,15,1,16,-3,-13,-4,21,1
+  for(k=0;k<10;k++){
+      createPickUp(posiblePos[0+xPos],posiblePos[1+yPos]);
+      xPos +=2;
+      yPos +=2;
   }
 }
 
@@ -427,8 +435,8 @@ function createPickUp(xPos,zPos) {
   collectibleMeshList.push(mesh);
   scene.add(mesh);
 
-  createModel("./modelos/Drop/", "Drop.mtl", "Drop.obj", "Pickup"+pickupNum);
-  pickupNum += 1;
+  createModel("./modelos/Drop/", "Drop.mtl", "Drop.obj", "Pickup");
+  
 }
 // ----------------------------------
 // Funciones llamadas desde el index:
