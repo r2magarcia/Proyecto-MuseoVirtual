@@ -15,6 +15,7 @@ var sound1 = null,
     figuresGeo = [],
     isVisible = true;
 
+
 var points = 0;
 
 var MovingCube = null,
@@ -36,6 +37,9 @@ var posY = 0.5;
 var posZ = 1;
 var player = null;
 var playerCreated = false;
+
+var
+    hemisphereLight;
 // ----------------------------
 // Funciones de creación init:
 // ----------------------------
@@ -128,14 +132,18 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
                     modelPlay = object;
                     figuresGeo.push(modelPlay);
 
-                    object.scale.set(0.003, 0.003, 0.003);
+                    object.scale.set(0.005, 0.005, 0.005);
+                    //object.geometry.center();
                     object.position.x = MovingCube.position.x;
                     object.position.y = MovingCube.position.y;
                     object.position.z = MovingCube.position.z;
+                    //object.translate(-0.5);
                     object.rotation.y = Math.PI / 2 + Math.PI / 2;
                     player = object;
                     console.log("Player creado");
                     scene.add(player);
+                    //player.geometry.center();
+                    //player.translate(-0.5, 0, 0);
                     playerCreated = true;
                     break;
             }
@@ -145,15 +153,54 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
     });
 }
 
+function createSpotlight(color) {
+
+    var newObj = new THREE.SpotLight(color, 2);
+
+    newObj.castShadow = true;
+    newObj.angle = 0.3;
+    newObj.penumbra = 0.2;
+    newObj.decay = 10;
+    newObj.distance = 200;
+
+    return newObj;
+
+}
+
 function createLight() {
+
+    hemisphereLight = new THREE.HemisphereLight(0x330080, 0x9999ff, 0.3);
+    scene.add(hemisphereLight);
+
+    var spotLight1 = createSpotlight(0xcc00ff);
+    var spotLight2 = createSpotlight(0x00e6e6);
+    var spotLight3 = createSpotlight(0xff80bf);
+
+    spotLight1.position.set(50, 20, 5);
+    spotLight2.position.set(10, 10, 65);
+    spotLight3.position.set(-70, 30, -45);
+
+    //spotLight1.target = player;
+    lightHelper1 = new THREE.SpotLightHelper(spotLight1);
+    lightHelper2 = new THREE.SpotLightHelper(spotLight2);
+    lightHelper3 = new THREE.SpotLightHelper(spotLight3);
+
+    spotLight1.castShadow = true;
+    spotLight2.castShadow = true;
+    spotLight3.castShadow = true;
+
+    scene.add(spotLight1, spotLight2);
+    // spotLight3);
+    scene.add(lightHelper1, lightHelper2, lightHelper3);
+    console.log("luces creadas");
     /*var light2 = new THREE.AmbientLight(0xffffff);
     light2.position.set(10, 10, 10);
     scene.add(light2);
     light = new THREE.DirectionalLight(0xffffff, 0, 1000);
     scene.add(light);*/
 
-    var lighth = new THREE.HemisphereLight(0x99ccff, 0x99e699, 0.8);
-    scene.add(lighth);
+    // var lighth = new THREE.HemisphereLight(0x99ccff, 0x99e699, 0.8);
+    // scene.add(lighth);
     // Create a directional light
     //light = new THREE.DirectionalLight(0xffffdc, 0.5, 100);
     // move the light back and up a bit
@@ -274,7 +321,7 @@ function movePlayer() {
     }
 
     if (playerCreated) player.position.set(MovingCube.position.x, MovingCube.position.y, MovingCube.position.z)
-    var relativeCameraOffset = new THREE.Vector3(0, 3, 10);
+    var relativeCameraOffset = new THREE.Vector3(0, 1.5, 3);
 
     var cameraOffset = relativeCameraOffset.applyMatrix4(MovingCube.matrixWorld);
 
