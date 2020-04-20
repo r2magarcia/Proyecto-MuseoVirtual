@@ -19,9 +19,11 @@ var points = 0;
 
 var MovingCube          = null,
     collidableMeshList  = [],
+    mesh = [],
     collectibleMeshList = [],
     lives               = 3,
-    numberToCreate      = 11;
+    numberToCreate      = 11,
+    cont = 0;
 
 var color = new THREE.Color();
 
@@ -30,9 +32,11 @@ var rotSpd = 0.05;
 var spd    = 0.05;
 var input  = {left:0,right:0, up: 0, down: 0};
 var pickupCreated = null;
-var modelpick = null;
+var modelpick = [];
 var pickupNum = 0;
 var posiblePos = [10,13,2,5,-5,1,15,1,16,-3,-13,-4,21,1];
+var dxpos=0;
+var dypos=0;
 
 var posX = 3;
 var posY = 0.5;
@@ -56,13 +60,13 @@ function onWindowResize() {
 
 function initScene(){
     initBasicElements(); // Scene, Camera and Render
+    createMultiplyPick();
     initSound();         // To generate 3D Audio
     createLight();       // Create light
     initWorld();
     createPlayerMove();
     createFrontera();
     initGUI();
-    createMultiplyPick();
 }
 
 function animate(){
@@ -143,8 +147,15 @@ function createModel(generalPath,pathMtl,pathObj,whatTodraw) {
           break;
 
           case "pickup":
-            modelpick = object;
-            object.position.set()
+            for(k=0; k<7; k++){
+              object.scale.set(0.5, 0.5, 0.5);
+              object.position.x = mesh[cont].position.x;
+              object.position.y = mesh[cont].position.y;
+              object.position.z = mesh[cont].position.z;
+              modelpick[k]=object;
+              scene.add(modelpick[k]);
+            }
+          break;
 
         }
             scene.add(object);
@@ -208,8 +219,6 @@ function initGUI() {
 
   // Change
   // Select
-  
-  createModel('./modelos/Car/', 'Cartoon_Lowpoly_Car.mtl', 'Cartoon_Lowpoly_Car.obj', 'player');
   
 
   // true/false
@@ -422,20 +431,44 @@ function createPickUp(xPos,zPos) {
   const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe:false, transparent: true, opacity: 0.5 });
 
   // create a Mesh containing the geometry and material
-  mesh = new THREE.Mesh( geometry, material );
+  mesh[pickupNum] = new THREE.Mesh( geometry, material );
+  
 
   var randomIdentify = Math.floor(Math.random() * 101);
-  mesh.name = "modelToPick"+randomIdentify;
-  mesh.id   = "modelToPick"+randomIdentify;
+  mesh[pickupNum].name = "modelToPick"+randomIdentify;
+  mesh[pickupNum].id   = "modelToPick"+randomIdentify;
 
-  mesh.position.x = (camera.position.x-2)+xPos;
-  mesh.position.y = camera.position.y;
-  mesh.position.z = camera.position.z-zPos;
+  mesh[pickupNum].position.x = (camera.position.x-2)+xPos;
+  mesh[pickupNum].position.y = camera.position.y;
+  mesh[pickupNum].position.z = camera.position.z-zPos;
   // add the mesh to the scene object
-  collectibleMeshList.push(mesh);
-  scene.add(mesh);
+  collectibleMeshList.push(mesh[pickupNum]);
+  scene.add(mesh[pickupNum]);
+  console.log(mesh[pickupNum]);
+  
+  var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setTexturePath("./modelos/Drop/");
+    mtlLoader.setPath("./modelos/Drop/");
+    mtlLoader.load("Drop.mtl", function (materials) {
+      
+      materials.preload();
+      var objLoader = new THREE.OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.setPath("./modelos/Drop/");
+      objLoader.load("Drop.obj", function (object) {
+      object.scale.set(0.2, 0.2, 0.2);
+      object.position.x = (camera.position.x-2)+xPos;
+      object.position.y = 0.6;
+      object.position.z = camera.position.z-zPos-10;
+      modelpick[pickupNum]=object;
+      modelpick[pickupNum].name = 'drop' + pickupNum;
+      scene.add(modelpick[pickupNum]);
+      //scene.add(object);
+        });
 
-  createModel("./modelos/Drop/", "Drop.mtl", "Drop.obj", "Pickup");
+    });
+
+  pickupNum++;
   
 }
 // ----------------------------------
@@ -483,6 +516,8 @@ function collisionAnimate() {
       document.getElementById("points").innerHTML = points;//"clear "+collisionRCollect[0].object.name;//points;
       // console.log("clear "+collisionRCollect[0].object.name);
       collisionRCollect[0].object.visible = false;
+      scene.remove(scene.getObjectByName('drop'+cont));
+      cont++;
       console.log( collisionRCollect[0].object.name );
       playAudio(c);
       points += 1;
