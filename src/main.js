@@ -145,12 +145,13 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
                     //object.geometry.center();
                     object.position.x = MovingCube.position.x;
                     object.position.y = MovingCube.position.y;
-                    object.position.z = MovingCube.position.z;
+                    object.position.z = MovingCube.position.z+2;
                     //object.translate(-0.5);
                     object.rotation.y = Math.PI / 2 + Math.PI / 2;
                     player = object;
-                    console.log("Player creado");
+                    var idk = player;
                     scene.add(player);
+                    //idk.applyMatrix( new THREE.Matrix4().makeTranslation( 0.5, 0, 0 ) );
                     //player.geometry.center();
                     //player.translate(-0.5, 0, 0);
                     playerCreated = true;
@@ -195,8 +196,11 @@ function createLight() {
 
     //spotLight1.target = player;
     lightHelper1 = new THREE.SpotLightHelper(spotLight1);
+    lightHelper1.visible = false;
     lightHelper2 = new THREE.SpotLightHelper(spotLight2);
+    lightHelper2.visible = false;
     lightHelper3 = new THREE.SpotLightHelper(spotLight3);
+    lightHelper3.visible = false;
 
     spotLight1.castShadow = true;
     spotLight2.castShadow = true;
@@ -281,7 +285,6 @@ function movePlayer() {
     var delta = clock.getDelta(); // seconds.
     var moveDistance = 3 * delta; // 200 pixels per second
     var rotateAngle = Math.PI / 2 * delta; // pi/2 radians (90 degrees) per second
-
     if (figuresGeo.length <= 0)
         movTra = false; // ("No hay player")
     else
@@ -291,14 +294,12 @@ function movePlayer() {
         //camera.rotation.y -= rotSpd;
         MovingCube.rotation.y -= rotSpd;
         player.rotation.y -= rotSpd;
-        moveModelAround(movTra, 0.01, 1);
         // modelPlay.rotation.y  -= rotSpd;
     }
     if (input.left == 1) {
         //camera.rotation.y += rotSpd;
         MovingCube.rotation.y += rotSpd;
         player.rotation.y += rotSpd;
-        moveModelAround(movTra, 0.01, 2);
         // modelPlay.rotation.y  += rotSpd;
     }
 
@@ -328,7 +329,10 @@ function movePlayer() {
         // modelPlay.position.x += Math.sin(camera.rotation.y) * spd;
     }
 
-    if (playerCreated) player.position.set(MovingCube.position.x, MovingCube.position.y, MovingCube.position.z)
+    if (playerCreated){ 
+        player.position.set(MovingCube.position.x, MovingCube.position.y, MovingCube.position.z)
+        player.translateX(0.6);
+    }
     var relativeCameraOffset = new THREE.Vector3(0, 1.5, 3);
 
     var cameraOffset = relativeCameraOffset.applyMatrix4(MovingCube.matrixWorld);
@@ -574,6 +578,9 @@ function collisionAnimate() {
             console.log(collisionRCollect[0].object.name);
             playAudio(c);
             points += 1;
+            if(points == 7){
+                document.getElementById("win").style.display = "block";
+            }
             i += 20;
             // console.log(points);
         } else {
@@ -611,6 +618,7 @@ function fuelInteractions() {
                 clearInterval(id);
                 i = 0;
                 //you loose
+                //document.getElementById("lost").style.display = "block";
             } else {
                 i--;
                 width = i;
