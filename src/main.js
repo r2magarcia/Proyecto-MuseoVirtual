@@ -27,6 +27,7 @@ var MovingCube          = null,
     cont = 0;
 
 var color = new THREE.Color();
+var gamewon = false;
 
 var scale = 1;
 var rotSpd = 0.05;
@@ -92,7 +93,7 @@ function initBasicElements() {
     // controls = new THREE.OrbitControls(camera, renderer.domElement);
     // controls.update();
 
-    scene.background = new THREE.Color(0x0099ff);
+    scene.background = new THREE.Color(0x090945);;
     scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
     /*var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
@@ -109,7 +110,7 @@ function initBasicElements() {
 }
 
 function initSound() {
-    sound1 = new Sound(["./songs/Tokyo_Drift.mp3"], 500, scene, { // radio(10)
+    sound1 = new Sound(["./songs/Tokyo_Drift.mp3"], 500, scene, {
         debug: true,
         position: { x: camera.position.x, y: camera.position.y + 10, z: camera.position.z }
     });
@@ -193,6 +194,9 @@ function createLight() {
     spotLight3.position.set(-70, 30, -45);
 
     spotLight1.intensity = 0.3;
+
+    var ambientLight = new THREE.AmbientLight(0xb3b388, 0.15); // soft white light
+    scene.add(ambientLight);
 
     //spotLight1.target = player;
     lightHelper1 = new THREE.SpotLightHelper(spotLight1);
@@ -414,30 +418,8 @@ function moveModelAround(movTra, rotationT, caseToDo) {
 function go2Play() {
     document.getElementById('blocker').style.display = 'none';
     document.getElementById('cointainerOthers').style.display = 'block';
-    playAudio(x);
-    initialiseTimer();
+    playAudio(song);
     fuelInteractions();
-}
-
-function initialiseTimer() {
-    var sec = 0;
-
-    function pad(val) { return val > 9 ? val : "0" + val; }
-
-    setInterval(function() {
-        document.getElementById("seconds").innerHTML = String(pad(++sec % 60));
-        document.getElementById("minutes").innerHTML = String(pad(parseInt(sec / 60, 10)));
-
-        /*if((sec >= 7)){
-          if(points<10){
-            // console.log("perdio");
-            document.getElementById("lost").style.display = "block";
-          }else{
-            // console.log("gano!");
-            document.getElementById("win").style.display = "block";
-          }
-        }*/
-    }, 1000);
 }
 
 function showInfoCreator() {
@@ -576,10 +558,12 @@ function collisionAnimate() {
             collisionRCollect[0].object.visible = false;
             //modelpick[cont].visible = false;
             console.log(collisionRCollect[0].object.name);
-            playAudio(c);
+            playAudio(pick);
             points += 1;
             if(points == 7){
                 document.getElementById("win").style.display = "block";
+                playAudio(wins);
+                gamewon=true;
             }
             i += 20;
             // console.log(points);
@@ -607,7 +591,7 @@ function conditionWorld() {
 var i = 100;
 
 function fuelInteractions() {
-    if (i == 100) {
+    if (i == 100 && !gamewon) {
         i = 99;
         var elem = document.getElementById("myBar");
         var width = 99;
@@ -618,7 +602,8 @@ function fuelInteractions() {
                 clearInterval(id);
                 i = 0;
                 //you loose
-                //document.getElementById("lost").style.display = "block";
+                document.getElementById("lost").style.display = "block";
+                playAudio(end);
             } else {
                 i--;
                 width = i;

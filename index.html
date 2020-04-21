@@ -97,13 +97,17 @@
 		Your browser does not support the audio element.
     </audio>
     <audio id="pickAudio">
-		<source src="songs/collectible.mp3" type="audio/mpeg">
+		<source src="songs/Pickup_Coin3.wav" type="audio/mpeg">
 		Your browser does not support the audio element.
-	</audio>
+    </audio>
+    <audio id="winning">
+        <source src="songs/Randomize32.wav" type="audio/mpeg">
+    </audio>
     <script>
-        var x = document.getElementById("myAudio");
-        var y = document.getElementById("endGame");
-        var c = document.getElementById("pickAudio");
+        var song = document.getElementById("myAudio");
+        var end = document.getElementById("endGame");
+        var pick = document.getElementById("pickAudio");
+        var wins = document.getElementById("winning");
 
         function playAudio(k) {
             k.volume = 0.5;

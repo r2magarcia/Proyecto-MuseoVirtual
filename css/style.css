@@ -270,14 +270,14 @@
     cursor: pointer;
 }
 
-#timer {
+/*#timer {
     position: absolute;
     bottom: 5px;
     left: 0px;
     width: 100%;
     z-index: 5;
     top: 90%;
-}
+}*/
 
 .timertext {
     font-size: 30px;
@@ -415,12 +415,12 @@ p {
 }
 
 #myProgress {
-    width: 65%;
+    width: 90%;
     z-index: 10;
     background-color: grey;
     position: absolute;
     top: 90%;
-    left: 25%;
+    left: 1%;
 }
 
 #myBar {
