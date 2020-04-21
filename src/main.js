@@ -5,7 +5,9 @@ var scene = null,
     camera = null,
     renderer = null,
     controls = null,
-    clock = null;
+    clock = null,
+    ambientLight=null,
+    interval = 5000;
 
 var sound1 = null,
     countPoints = null,
@@ -17,6 +19,13 @@ var sound1 = null,
 
 
 var points = 0;
+var tips = {
+    0: 'In NY carbon monoxide mainly from cars had been reduced by nearly 50% compared with last year.',
+    1: 'The coronavirus pandemic is shutting down industrial activity and temporarily slashing air pollution levels around the world',
+    2: 'Nitrogen dioxide is produced from car engines, power plants and other industrial processes and is thought to exacerbate respiratory illnesses such as asthma.',
+    3: 'China emits over 50% of all the nitrogen dioxide in Asia.'
+
+};
 
 var MovingCube          = null,
     collidableMeshList  = [],
@@ -195,7 +204,7 @@ function createLight() {
 
     spotLight1.intensity = 0.3;
 
-    var ambientLight = new THREE.AmbientLight(0xb3b388, 0.15); // soft white light
+    ambientLight = new THREE.AmbientLight(0xb3b388, 0.15); // soft white light
     scene.add(ambientLight);
 
     //spotLight1.target = player;
@@ -255,14 +264,12 @@ function initGUI() {
       speed = 0.1;
 
   parametros ={
-      a: "Mario",     // Slect to load different model
-      b: true,        // True or False to see the model
-      d: 1,f:1,g:1    // Slider intensity light
+      b: 1000,
+      d: 1    // Slider intensity light
   };
 
   // Add parametros to Screen
-  //var loadGUI      = gui.add(parametros, 'a', ['Mario','Luigi']).name('Select player');
-  var showGUI      = gui.add(parametros, 'b').name('Show Model');
+  var tipmiliseconds = gui.add(parametros, 'b').min(2000).max(7000).step(speed).name("Tip interval")
   var intensityGUI = gui.add(parametros, 'd').min(0).max(2).step(speed).name('Intensity Light');
 
   // Change
@@ -270,14 +277,14 @@ function initGUI() {
   
 
   // true/false
-  showGUI.onChange(function(jar){
-      isVisible = jar;
-      figuresGeo[0].visible =  jar; 
-  });
 
   // Slider
   intensityGUI.onChange(function(jar) {
-      light.intensity = jar;
+      ambientLight.intensity = jar;
+  });
+
+  tipmiliseconds.onChange(function(jar){
+      interval = jar;
   });
 
   gui.close();
@@ -514,7 +521,7 @@ function makeDrop(pick, xPos, zPos){
 // Funciones llamadas desde el index:
 // ----------------------------------
 function createPlayerMove() {
-    var cubeGeometry = new THREE.CubeGeometry(1, 1, 1, 1, 1, 1);
+    var cubeGeometry = new THREE.CubeGeometry(1, 1.6, 2.1, 1, 1, 1);
     var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: false, transparent: true, opacity: 0.5 });
     MovingCube = new THREE.Mesh(cubeGeometry, wireMaterial);
     MovingCube.position.set(camera.position.x, camera.position.y, camera.position.z);
@@ -602,8 +609,10 @@ function fuelInteractions() {
                 clearInterval(id);
                 i = 0;
                 //you loose
-                document.getElementById("lost").style.display = "block";
-                playAudio(end);
+                //document.getElementById("lost").style.display = "block";
+                if(gamewon==false){
+                    playAudio(end);
+                }
             } else {
                 i--;
                 width = i;
@@ -613,4 +622,15 @@ function fuelInteractions() {
         }
     }
 
+}
+
+function autoRefreshTip() {
+    var pos = getRandomArbitrary(0, 3);
+    console.log(pos)
+    document.getElementById("tips").innerHTML = tips[pos];
+
+}
+setInterval(autoRefreshTip, interval); // Time is set in milliseconds
+function getRandomArbitrary(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
 }
