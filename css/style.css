@@ -1,23 +1,24 @@
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
 }
+
 #app {
     position: absolute !important;
     width: 100% !important;
     height: 100% !important;
     z-index: 0;
 }
-.gui{
+
+.gui {
     position: absolute;
     color: white;
     display: flex;
     flex-flow: column;
     right: 0%;
     margin: 20px;
-
     border-style: solid;
     padding: 10px;
     background-color: darkorange;
@@ -25,10 +26,12 @@
     width: 150px;
     height: 150px;
 }
-.gui .vector span{
+
+.gui .vector span {
     font-size: 120%;
 }
-.gui .vector input{
+
+.gui .vector input {
     margin: 2px;
     border-radius: 5px;
     border: 1px solid rgba(133, 133, 133, 0.276);
@@ -37,7 +40,8 @@
     width: 60px;
     text-align: center;
 }
-.gui .coolButton{
+
+.gui .coolButton {
     width: 100%;
     background-color: white;
     color: black;
@@ -48,7 +52,9 @@
     border-radius: 5px;
 }
 
+
 /* Float four columns side by side */
+
 .column {
     float: left;
     width: 33%;
@@ -56,26 +62,34 @@
     padding: 5px;
 }
 
+
 /* Remove extra left and right margins, due to padding */
-.row {margin: 0 -5px;}
+
+.row {
+    margin: 0 -5px;
+}
+
 
 /* Clear floats after the columns */
+
 .row:after {
     content: "";
     display: table;
     clear: both;
 }
 
+
 /* Responsive columns */
+
 @media screen and (max-width: 600px) {
     .column {
-    width: 100%;
-    display: block;
-    margin-bottom: 20px;
+        width: 100%;
+        display: block;
+        margin-bottom: 20px;
     }
 }
 
-.warningMssg{
+.warningMssg {
     align-content: left!important;
     align-items: left;
     text-align: center;
@@ -87,7 +101,7 @@
     /* width: 20%; */
 }
 
-.flat{
+.flat {
     height: 91px;
     margin-top: 13px;
     cursor: pointer;
@@ -97,37 +111,47 @@
 .swing {
     animation: swing ease-in-out 1s infinite alternate;
     /* transform-origin: center -20px; */
-    float:left;
+    float: left;
     /* box-shadow: 5px 5px 10px rgba(0,0,0,0.5); */
 }
 
-.swing:after{
+.swing:after {
     /* content: ''; */
-    position: absolute;  
-    width: 20px; height: 20px;  
+    position: absolute;
+    width: 20px;
+    height: 20px;
     border: 1px solid #999;
-    top: -10px; left: 50%;
+    top: -10px;
+    left: 50%;
     z-index: 0;
     border-bottom: none;
     border-right: none;
     transform: rotate(45deg);
 }
+
+
 /* nail */
-.swing:before{
+
+.swing:before {
     /* content: ''; */
     position: absolute;
-    width: 5px; height: 5px;
-    top: -14px;left: 54%;
+    width: 5px;
+    height: 5px;
+    top: -14px;
+    left: 54%;
     z-index: 5;
     border-radius: 50% 50%;
     background: #000;
 }
- 
-@keyframes swing {
-    0% { transform: rotate(3deg); }
-    100% { transform: rotate(-3deg); }
-}
 
+@keyframes swing {
+    0% {
+        transform: rotate(3deg);
+    }
+    100% {
+        transform: rotate(-3deg);
+    }
+}
 
 .quadrado {
     width: 200px;
@@ -139,11 +163,15 @@
 }
 
 @keyframes crescendo {
-    0%   {transform: scale(.8);}
-    100% {transform: scale(1.0);}
+    0% {
+        transform: scale(.8);
+    }
+    100% {
+        transform: scale(1.0);
+    }
 }
 
-.footerStyle{
+.footerStyle {
     position: fixed;
     bottom: 0;
     background-color: white;
@@ -156,26 +184,30 @@
     float: left;
     width: 49%;
 }
-  
+
+
 /* Clear floats after the columns */
+
 .row:after {
     content: "";
     display: table;
     clear: both;
 }
 
-.logoUsb{
+.logoUsb {
     height: 64px;
     margin-top: -8px;
     margin-bottom: -16px;
 }
-.vertical { 
+
+.vertical {
     border-left: 3px solid orange;
     height: 38px;
     position: absolute;
     left: 50%;
-} 
-.mssg{
+}
+
+.mssg {
     position: absolute;
     background-color: white;
     padding: 17px;
@@ -185,7 +217,7 @@
     border-radius: 15px;
 }
 
-#blocker{
+#blocker {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -196,7 +228,7 @@
     z-index: 9;
 }
 
-#lost{
+#lost {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -207,7 +239,7 @@
     z-index: 5!important;
 }
 
-#win{
+#win {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -220,36 +252,31 @@
 
 #instructions {
     width: 100%;
-	height: 100%;
-
-	display: -webkit-box;
-	display: -moz-box;
-	display: box;
-
-	-webkit-box-orient: horizontal;
-	-moz-box-orient: horizontal;
-	box-orient: horizontal;
-
-	-webkit-box-pack: center;
-	-moz-box-pack: center;
-	box-pack: center;
-
-	-webkit-box-align: center;
-	-moz-box-align: center;
-	box-align: center;
-
-	color: #ffffff;
-	text-align: center;
-
-	cursor: pointer;
+    height: 100%;
+    display: -webkit-box;
+    display: -moz-box;
+    display: box;
+    -webkit-box-orient: horizontal;
+    -moz-box-orient: horizontal;
+    box-orient: horizontal;
+    -webkit-box-pack: center;
+    -moz-box-pack: center;
+    box-pack: center;
+    -webkit-box-align: center;
+    -moz-box-align: center;
+    box-align: center;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
 }
 
-#timer{
+#timer {
     position: absolute;
-    bottom:5px;
-    left:0px;
-    width:100%;
+    bottom: 5px;
+    left: 0px;
+    width: 100%;
     z-index: 5;
+    top: 90%;
 }
 
 .timertext {
@@ -258,74 +285,103 @@
     display: inline-block;
     color: rgb(24, 20, 20);
     z-index: 10000;
-
+    color: whitesmoke;
 }
-@import url(https://fonts.googleapis.com/css?family=Amatic+SC);
 
+@import url(https://fonts.googleapis.com/css?family=Amatic+SC);
 body {
-	font-family: 'Amatic SC', cursive;
-	background-color: #111111;
-	color: #cccccc;
+    font-family: 'Amatic SC', cursive;
+    background-color: #111111;
+    color: #cccccc;
 }
 
 p {
-	font-size: 3em;
-	display: table-cell; 
-	vertical-align: middle;
-	text-align: center;
-	opacity: 0;
-
+    font-size: 3em;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    opacity: 0;
 }
 
-.text{
-	top: 0; 
-	left: 0; 
-	width: 100%; 
-	height: 100%;
-	position: fixed; 
-	display: table;
+.text {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    display: table;
 }
 
-.t1{
-	animation: t-animation 6s;
+.t1 {
+    animation: t-animation 6s;
 }
 
-.t2{
-	animation: t-animation 6s;
-	animation-delay: 6s;
+.t2 {
+    animation: t-animation 6s;
+    animation-delay: 6s;
 }
 
-.end{
-	animation: end-animation 2s;
-	animation-delay: 12s;
-	animation-fill-mode: forwards; 
+.end {
+    animation: end-animation 2s;
+    animation-delay: 12s;
+    animation-fill-mode: forwards;
 }
 
-.flicker{
-	animation: flicker 10s infinite;
+.flicker {
+    animation: flicker 10s infinite;
 }
 
 @keyframes t-animation {
-	0% {opacity: 0;}
-	30% {opacity: 1;}
-	70% {opacity: 1;}
-	100% {opacity: 0;}
+    0% {
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+    70% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 @keyframes end-animation {
-	0% {opacity: 0;}
-	100% {opacity: 1;}
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }
 
 @keyframes flicker {
-	40.1% {left:0px;top:0px;}
-	40.2% {left:10px;top:8px;}
-	40.3% {left:0px;top:0px;}
-
-	90.1% {left:0px;top:0px;}
-	90.2% {left:-5px;top:3px;}
-	90.3% {left:0px;top:0px;}
+    40.1% {
+        left: 0px;
+        top: 0px;
+    }
+    40.2% {
+        left: 10px;
+        top: 8px;
+    }
+    40.3% {
+        left: 0px;
+        top: 0px;
+    }
+    90.1% {
+        left: 0px;
+        top: 0px;
+    }
+    90.2% {
+        left: -5px;
+        top: 3px;
+    }
+    90.3% {
+        left: 0px;
+        top: 0px;
+    }
 }
+
 .button {
     background-color: #f4511e;
     border: none;
@@ -340,7 +396,35 @@ p {
     cursor: pointer;
     border-radius: 10px;
     opacity: 0;
-  }
-  
-  .button:hover {opacity: 0.6}
-  
+}
+
+.button:hover {
+    opacity: 0.6
+}
+
+#tips {
+    position: absolute;
+    top: 5px;
+    text-align: center;
+    width: 100%;
+    z-index: 10;
+    color: whitesmoke;
+    opacity: 90;
+    font-size: 36px;
+    background-color: black;
+}
+
+#myProgress {
+    width: 65%;
+    z-index: 10;
+    background-color: grey;
+    position: absolute;
+    top: 90%;
+    left: 25%;
+}
+
+#myBar {
+    width: 100%;
+    height: 30px;
+    background-color: whitesmoke;
+}

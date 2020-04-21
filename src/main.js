@@ -72,6 +72,8 @@ function animate() {
     sound1.update(camera);
     movePlayer();
     collisionAnimate();
+    //fuelInteractions();
+
 }
 
 function initBasicElements() {
@@ -160,8 +162,9 @@ function createSpotlight(color) {
     newObj.castShadow = true;
     newObj.angle = 0.3;
     newObj.penumbra = 0.2;
-    newObj.decay = 10;
+    newObj.decay = 4.5;
     newObj.distance = 200;
+    newObj.intensity = 0.6;
 
     return newObj;
 
@@ -172,13 +175,16 @@ function createLight() {
     hemisphereLight = new THREE.HemisphereLight(0x330080, 0x9999ff, 0.3);
     scene.add(hemisphereLight);
 
-    var spotLight1 = createSpotlight(0xcc00ff);
-    var spotLight2 = createSpotlight(0x00e6e6);
-    var spotLight3 = createSpotlight(0xff80bf);
+    var spotLight1 = createSpotlight(0xffff4d);
+    var spotLight2 = createSpotlight(0xff80bf);
+    var spotLight3 = createSpotlight(0x00e6e6);
+    //00e6e6
 
-    spotLight1.position.set(50, 20, 5);
-    spotLight2.position.set(10, 10, 65);
+    spotLight1.position.set(50, 20, -30);
+    spotLight2.position.set(-40, 10, 65);
     spotLight3.position.set(-70, 30, -45);
+
+    spotLight1.intensity = 0.3;
 
     //spotLight1.target = player;
     lightHelper1 = new THREE.SpotLightHelper(spotLight1);
@@ -189,8 +195,7 @@ function createLight() {
     spotLight2.castShadow = true;
     spotLight3.castShadow = true;
 
-    scene.add(spotLight1, spotLight2);
-    // spotLight3);
+    scene.add(spotLight1, spotLight2, spotLight3);
     scene.add(lightHelper1, lightHelper2, lightHelper3);
     console.log("luces creadas");
     /*var light2 = new THREE.AmbientLight(0xffffff);
@@ -404,6 +409,7 @@ function go2Play() {
     document.getElementById('cointainerOthers').style.display = 'block';
     playAudio(x);
     initialiseTimer();
+    fuelInteractions();
 }
 
 function initialiseTimer() {
@@ -528,6 +534,7 @@ function collisionAnimate() {
             console.log(collisionRCollect[0].object.name);
             playAudio(c);
             points += 1;
+            i += 20;
             // console.log(points);
         } else {
             document.getElementById("points").innerHTML = points;
@@ -548,4 +555,29 @@ function conditionWorld() {
         pauseAudio(x);
         playAudio(y);
     }
+}
+
+var i = 100;
+
+function fuelInteractions() {
+    if (i == 100) {
+        i = 99;
+        var elem = document.getElementById("myBar");
+        var width = 99;
+        var id = setInterval(frame, 100);
+
+        function frame() {
+            if (width <= 0) {
+                clearInterval(id);
+                i = 0;
+                //you loose
+            } else {
+                i--;
+                width = i;
+                elem.style.width = width + "%";
+                console.log(i);
+            }
+        }
+    }
+
 }
