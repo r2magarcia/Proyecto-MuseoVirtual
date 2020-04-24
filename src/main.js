@@ -79,7 +79,6 @@ function initScene() {
     createLight();       // Create light
     initWorld();
     createPlayerMove();
-    createFrontera();
     initGUI();
 }
 
@@ -89,7 +88,6 @@ function animate() {
     sound1.update(camera);
     movePlayer();
     collisionAnimate();
-    //fuelInteractions();
 
 }
 
@@ -99,16 +97,8 @@ function initBasicElements() {
     renderer = new THREE.WebGLRenderer({ canvas: document.querySelector("#app") });
     clock = new THREE.Clock();
 
-    // controls = new THREE.OrbitControls(camera, renderer.domElement);
-    // controls.update();
-
     scene.background = new THREE.Color(0x090945);;
     scene.fog = new THREE.Fog(0xffffff, 0, 750);
-
-    /*var light = new THREE.HemisphereLight( 0xeeeeff, 0x777788, 0.75 );
-    light.position.set( 0.5, 1, 0.75 );
-    scene.add( light );
-    light.CastShadow = true*/
 
     renderer.setSize(window.innerWidth, window.innerHeight - 4);
     document.body.appendChild(renderer.domElement);
@@ -152,18 +142,12 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
                     figuresGeo.push(modelPlay);
 
                     object.scale.set(0.005, 0.005, 0.005);
-                    //object.geometry.center();
                     object.position.x = MovingCube.position.x;
                     object.position.y = MovingCube.position.y;
                     object.position.z = MovingCube.position.z+2;
-                    //object.translate(-0.5);
                     object.rotation.y = Math.PI / 2 + Math.PI / 2;
                     player = object;
-                    var idk = player;
                     scene.add(player);
-                    //idk.applyMatrix( new THREE.Matrix4().makeTranslation( 0.5, 0, 0 ) );
-                    //player.geometry.center();
-                    //player.translate(-0.5, 0, 0);
                     playerCreated = true;
                     break;
             }
@@ -196,7 +180,6 @@ function createLight() {
     var spotLight1 = createSpotlight(0xffff4d);
     var spotLight2 = createSpotlight(0xff80bf);
     var spotLight3 = createSpotlight(0x00e6e6);
-    //00e6e6
 
     spotLight1.position.set(50, 20, -30);
     spotLight2.position.set(-40, 10, 65);
@@ -207,7 +190,6 @@ function createLight() {
     ambientLight = new THREE.AmbientLight(0xb3b388, 0.15); // soft white light
     scene.add(ambientLight);
 
-    //spotLight1.target = player;
     lightHelper1 = new THREE.SpotLightHelper(spotLight1);
     lightHelper1.visible = false;
     lightHelper2 = new THREE.SpotLightHelper(spotLight2);
@@ -221,34 +203,14 @@ function createLight() {
 
     scene.add(spotLight1, spotLight2, spotLight3);
     scene.add(lightHelper1, lightHelper2, lightHelper3);
-    console.log("luces creadas");
-    /*var light2 = new THREE.AmbientLight(0xffffff);
-    light2.position.set(10, 10, 10);
-    scene.add(light2);
-    light = new THREE.DirectionalLight(0xffffff, 0, 1000);
-    scene.add(light);*/
-
-    // var lighth = new THREE.HemisphereLight(0x99ccff, 0x99e699, 0.8);
-    // scene.add(lighth);
-    // Create a directional light
-    //light = new THREE.DirectionalLight(0xffffdc, 0.5, 100);
-    // move the light back and up a bit
-    //light.position.set(20, 20, 20);
-    // remember to add the light to the scene
-    //scene.add(light);
-
-    /*light2 = new THREE.DirectionalLight(0xffffdc, 0.2, 1000);
-    light.position.set(20, 20, 20);
-    scene.add(light2);*/
 }
 
 function initWorld() {
-    // Create Island
-    //createModel('./modelos/Town/', 'Level.mtl', 'Level.obj', 'world');
+
     createModel('./modelos/Town/', 'Level.mtl', 'Level.obj', 'world');
     createModel('./modelos/Car/', 'Cartoon_Lowpoly_Car.mtl', 'Cartoon_Lowpoly_Car.obj', 'player');
-    // floor
 
+    // floor
     var floorGeometry = new THREE.PlaneBufferGeometry(2000, 2000, 100, 100);
     floorGeometry.rotateX(-Math.PI / 2);
     floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
@@ -259,7 +221,7 @@ function initWorld() {
 }
 
 function initGUI() {
-  // alert("Esta es nuestra interfaz");
+
   var gui = new dat.GUI(),
       speed = 0.1;
 
@@ -272,13 +234,6 @@ function initGUI() {
   var tipmiliseconds = gui.add(parametros, 'b').min(2000).max(7000).step(speed).name("Tip interval")
   var intensityGUI = gui.add(parametros, 'd').min(0).max(2).step(speed).name('Intensity Light');
 
-  // Change
-  // Select
-  
-
-  // true/false
-
-  // Slider
   intensityGUI.onChange(function(jar) {
       ambientLight.intensity = jar;
   });
@@ -295,7 +250,6 @@ function initGUI() {
 function movePlayer() {
     var delta = clock.getDelta(); // seconds.
     var moveDistance = 3 * delta; // 200 pixels per second
-    var rotateAngle = Math.PI / 2 * delta; // pi/2 radians (90 degrees) per second
     if (figuresGeo.length <= 0)
         movTra = false; // ("No hay player")
     else
@@ -453,11 +407,8 @@ function makeDrop(pick, xPos, zPos){
       object.position.y = 0.6;
       object.position.z = camera.position.z-zPos-3;
       modelpick[pick]=object;
-      //scene.add(modelpick[pickupNum]);
-      //modelpick[pickupNum].visible = false;
       scene.add(object);
       object.name = 'drop'+pick;
-      console.log(object.name);
 
         });
 
@@ -474,17 +425,7 @@ function createPlayerMove() {
     scene.add(MovingCube);
 }
 
-function createFrontera() {
-    var cubeGeometry = new THREE.CubeGeometry(12, 5, 12, 1, 1, 1);
-    var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xff00ff, wireframe: true, transparent: true, opacity: 0.0 });
-    worldWalls = new THREE.Mesh(cubeGeometry, wireMaterial);
-    worldWalls.position.set(5, 0, 0);
-    //scene.add( worldWalls );
-    //collidableMeshList.push(worldWalls);
-}
-
 function collisionAnimate() {
-    // console.table(collectibleMeshList.name = collectibleMeshList[0], ["name"]);
 
     var originPoint = MovingCube.position.clone();
 
@@ -497,19 +438,11 @@ function collisionAnimate() {
         var collisionResults = ray.intersectObjects(collidableMeshList);
         var collisionRCollect = ray.intersectObjects(collectibleMeshList);
 
-        if ((collisionResults.length > 0 && collisionResults[0].distance < directionVector.length())) {
-            conditionWorld();
-        } else {  
-        }
-
         if (collisionRCollect.length > 0 && collisionRCollect[0].distance < directionVector.length()) {
-            document.getElementById("points").innerHTML = points; //"clear "+collisionRCollect[0].object.name;//points;
-            //console.log("clear "+collisionRCollect[0].object.id);
+            document.getElementById("points").innerHTML = points;
             var toErase = scene.getObjectByName('drop'+collisionRCollect[0].object.name);
             toErase.visible = false;
             collisionRCollect[0].object.visible = false;
-            //modelpick[cont].visible = false;
-            console.log(collisionRCollect[0].object.name);
             playAudio(pick);
             points += 1;
             if(points == 7){
@@ -519,25 +452,9 @@ function collisionAnimate() {
                 gamewon=true;
             }
             i += 20;
-            // console.log(points);
         } else {
             document.getElementById("points").innerHTML = points;
         }
-    }
-}
-
-function conditionWorld() {
-    document.getElementById("lives").innerHTML = lives; //'toco, '+ JSON.stringify(collisionResults[0].object.name);//points;
-    MovingCube.position.set(posX, 1, posZ);
-    if (figuresGeo.length > 0)
-        modelPlay.position.set(3, 0.2, 0.6);
-
-    lives = lives - 1;
-    if (lives == 0) {
-        document.getElementById("lost").style.display = "block";
-        document.getElementById("cointainerOthers").style.display = "none";
-        //pauseAudio(x);
-        //playAudio(y);
     }
 }
 
@@ -564,7 +481,6 @@ function fuelInteractions() {
                 i--;
                 width = i;
                 elem.style.width = width + "%";
-                console.log(i);
             }
         }
     }
@@ -573,7 +489,6 @@ function fuelInteractions() {
 
 function autoRefreshTip() {
     var pos = getRandomArbitrary(0, 3);
-    console.log(pos)
     document.getElementById("tips").innerHTML = tips[pos];
 
 }
