@@ -317,27 +317,9 @@ function movePlayer() {
     if (input.up == 1) {
         MovingCube.translateZ(-moveDistance);
         MovingCube.translateZ(-moveDistance);
-        // camera.position.z -= Math.cos(camera.rotation.y) * spd;
-        // camera.position.x -= Math.sin(camera.rotation.y) * spd;
-
-        // MovingCube.position.z -= Math.cos(camera.rotation.y) * spd;
-        // MovingCube.position.x -= Math.sin(camera.rotation.y) * spd;
-
-        // moveModelAround(movTra, 0.01, 3);
-        // modelPlay.position.z -= Math.cos(camera.rotation.y) * spd;
-        // modelPlay.position.x -= Math.sin(camera.rotation.y) * spd;
     }
     if (input.down == 1) {
         MovingCube.translateZ(moveDistance);
-        // camera.position.z += Math.cos(camera.rotation.y) * spd;
-        // camera.position.x += Math.sin(camera.rotation.y) * spd;
-
-        // MovingCube.position.z += Math.cos(camera.rotation.y) * spd;
-        // MovingCube.position.x += Math.sin(camera.rotation.y) * spd;
-
-        moveModelAround(movTra, 0.01, 4);
-        // modelPlay.position.z += Math.cos(camera.rotation.y) * spd;
-        // modelPlay.position.x += Math.sin(camera.rotation.y) * spd;
     }
 
     if (playerCreated){ 
@@ -392,33 +374,6 @@ window.addEventListener('keyup', function(e) {
     }
 });
 
-function moveModelAround(movTra, rotationT, caseToDo) {
-    /*if (movTra == true)
-        caseToDo = caseToDo;
-    else
-        caseToDo = 0;
-
-    switch (caseToDo) {
-        case 1:
-            modelPlay.rotation.y -= rotationT;
-            modelPlay.position.x = camera.position.x;
-            break;
-        case 2:
-            modelPlay.rotation.y += rotationT;
-            break;
-        case 3:
-            modelPlay.position.z -= Math.cos(camera.rotation.y) * spd;
-            modelPlay.position.x -= Math.sin(camera.rotation.y) * spd;
-            break;
-        case 4:
-            modelPlay.position.z += Math.cos(camera.rotation.y) * spd;
-            modelPlay.position.x += Math.sin(camera.rotation.y) * spd;
-            break;
-        default:
-            break;
-    }
-    */
-}
 // ----------------------------------
 // Funciones llamadas desde el index:
 // ----------------------------------
@@ -440,7 +395,7 @@ function showInfoCreator() {
 function createMultiplyPick() {
   var xPos = 0
   var yPos = 0
-  //10,13,2,5,-5,1,15,1,16,-3,-13,-4,21,1
+
   for(k=0;k<10;k++){
       createPickUp(posiblePos[0+xPos],posiblePos[1+yPos]);
       xPos +=2;
@@ -456,17 +411,10 @@ function createPickUp(xPos,zPos) {
   // create a geometry
   const geometry = new THREE.BoxBufferGeometry( 0.3, 0.3, 0.3 );
   
-  //  Create texture loader
-  //const textureLoader = new THREE.TextureLoader();
-  //const texture =  textureLoader.load('./img/boxText.jpg');
+  //  Create texture 
+  const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe:false, transparent: true, opacity: 0.0 });
 
-  /*const material = new THREE.MeshStandardMaterial( { 
-      map: texture,
-      wireframe:false 
-  } );*/
-  const material = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe:false, transparent: true, opacity: 0.5 });
-
-  // create a Mesh containing the geometry and material
+  // create a Mesh
   mesh[pickupNum] = new THREE.Mesh( geometry, material );
   
 
@@ -478,12 +426,10 @@ function createPickUp(xPos,zPos) {
   mesh[pickupNum].position.x = (camera.position.x-2)+xPos;
   mesh[pickupNum].position.y = camera.position.y;
   mesh[pickupNum].position.z = camera.position.z-zPos;
-  // add the mesh to the scene object
+
+  // add the mesh to the scene collisions object
   collectibleMeshList.push(mesh[pickupNum]);
   scene.add(mesh[pickupNum]);
-  console.log(pickupNum);
-  console.log(mesh.name);
-  //console.log(mesh[pickupNum]);
   makeDrop(pickupNum, xPos, zPos);
   
 
@@ -522,7 +468,7 @@ function makeDrop(pick, xPos, zPos){
 // ----------------------------------
 function createPlayerMove() {
     var cubeGeometry = new THREE.CubeGeometry(1, 1.6, 2.1, 1, 1, 1);
-    var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: false, transparent: true, opacity: 0.5 });
+    var wireMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: false, transparent: true, opacity: 0.0 });
     MovingCube = new THREE.Mesh(cubeGeometry, wireMaterial);
     MovingCube.position.set(camera.position.x, camera.position.y, camera.position.z);
     scene.add(MovingCube);
@@ -553,8 +499,7 @@ function collisionAnimate() {
 
         if ((collisionResults.length > 0 && collisionResults[0].distance < directionVector.length())) {
             conditionWorld();
-        } else {
-            document.getElementById("lives").innerHTML = lives; // 'no toco';  
+        } else {  
         }
 
         if (collisionRCollect.length > 0 && collisionRCollect[0].distance < directionVector.length()) {
@@ -569,6 +514,7 @@ function collisionAnimate() {
             points += 1;
             if(points == 7){
                 document.getElementById("win").style.display = "block";
+                pauseAudio(song);
                 playAudio(wins);
                 gamewon=true;
             }
@@ -590,8 +536,8 @@ function conditionWorld() {
     if (lives == 0) {
         document.getElementById("lost").style.display = "block";
         document.getElementById("cointainerOthers").style.display = "none";
-        pauseAudio(x);
-        playAudio(y);
+        //pauseAudio(x);
+        //playAudio(y);
     }
 }
 
@@ -609,8 +555,9 @@ function fuelInteractions() {
                 clearInterval(id);
                 i = 0;
                 //you loose
-                //document.getElementById("lost").style.display = "block";
+                document.getElementById("lost").style.display = "block";
                 if(gamewon==false){
+                    pauseAudio(song);
                     playAudio(end);
                 }
             } else {
