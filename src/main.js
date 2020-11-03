@@ -123,7 +123,7 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
             switch (whatTodraw) {
                 case "world":
                     modelWorld = object;
-                    object.scale.set(0.1, 0.1, 0.1);
+                    object.scale.set(0.03, 0.03, 0.03);
                     object.position.y = 0;
                     object.position.x = 5;
                     break;
@@ -189,7 +189,7 @@ function createLight() {
 
 function initWorld() {
 
-    createModel('./modelos/Town/', 'Level.mtl', 'Level.obj', 'world');
+    createModel('./modelos/Museo/', 'MuseoProyecto.mtl', 'MuseoProyecto.obj', 'world');
     // createModel('./modelos/Car/', 'Cartoon_Lowpoly_Car.mtl', 'Cartoon_Lowpoly_Car.obj', 'player');
 
     // floor
@@ -333,7 +333,7 @@ function createMultiplyPick() {
   var yPos = 0
 
   for(k=0;k<10;k++){
-      createPickUp(posiblePos[0+xPos],posiblePos[1+yPos]);
+    //   createPickUp(posiblePos[0+xPos],posiblePos[1+yPos]);
       xPos +=2;
       yPos +=2;
   }
