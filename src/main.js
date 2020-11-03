@@ -16,16 +16,7 @@ var sound1 = null,
     light = null,
     figuresGeo = [],
     isVisible = true;
-
-
-var points = 0;
-var tips = {
-    0: 'In NY carbon monoxide mainly from cars had been reduced by nearly 50% compared with last year.',
-    1: 'The coronavirus pandemic is shutting down industrial activity and temporarily slashing air pollution levels around the world',
-    2: 'Nitrogen dioxide is produced from car engines, power plants and other industrial processes and is thought to exacerbate respiratory illnesses such as asthma.',
-    3: 'China emits over 50% of all the nitrogen dioxide in Asia.'
-
-};
+var dirLight;
 
 var MovingCube          = null,
     collidableMeshList  = [],
@@ -79,7 +70,7 @@ function initScene() {
     createLight();       // Create light
     initWorld();
     createPlayerMove();
-    initGUI();
+    // initGUI();
 }
 
 function animate() {
@@ -87,7 +78,7 @@ function animate() {
     renderer.render(scene, camera);
     sound1.update(camera);
     movePlayer();
-    collisionAnimate();
+    // collisionAnimate();
 
 }
 
@@ -97,7 +88,7 @@ function initBasicElements() {
     renderer = new THREE.WebGLRenderer({ canvas: document.querySelector("#app") });
     clock = new THREE.Clock();
 
-    scene.background = new THREE.Color(0x090945);;
+    scene.background = new THREE.Color(0xdfdfdf);;
     scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
     renderer.setSize(window.innerWidth, window.innerHeight - 4);
@@ -147,6 +138,7 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
                     object.position.z = MovingCube.position.z+2;
                     object.rotation.y = Math.PI / 2 + Math.PI / 2;
                     player = object;
+                    
                     scene.add(player);
                     playerCreated = true;
                     break;
@@ -157,65 +149,55 @@ function createModel(generalPath, pathMtl, pathObj, whatTodraw) {
     });
 }
 
-function createSpotlight(color) {
-
-    var newObj = new THREE.SpotLight(color, 2);
-
-    newObj.castShadow = true;
-    newObj.angle = 0.3;
-    newObj.penumbra = 0.2;
-    newObj.decay = 4.5;
-    newObj.distance = 200;
-    newObj.intensity = 0.6;
-
-    return newObj;
-
-}
 
 function createLight() {
+    const hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+    hemiLight.color.setHSL( 0.6, 1, 0.6 );
+    hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+    hemiLight.position.set( 0, 50, 0 );
+    scene.add( hemiLight );
 
-    hemisphereLight = new THREE.HemisphereLight(0x330080, 0x9999ff, 0.3);
-    scene.add(hemisphereLight);
+    const hemiLightHelper = new THREE.HemisphereLightHelper( hemiLight, 10 );
+    scene.add( hemiLightHelper );
 
-    var spotLight1 = createSpotlight(0xffff4d);
-    var spotLight2 = createSpotlight(0xff80bf);
-    var spotLight3 = createSpotlight(0x00e6e6);
+    //
 
-    spotLight1.position.set(50, 20, -30);
-    spotLight2.position.set(-40, 10, 65);
-    spotLight3.position.set(-70, 30, -45);
+    dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
+    dirLight.color.setHSL( 0.1, 1, 0.95 );
+    dirLight.position.set( - 1, 1.75, 1 );
+    dirLight.position.multiplyScalar( 30 );
+    scene.add( dirLight );
 
-    spotLight1.intensity = 0.3;
+    dirLight.castShadow = true;
 
-    ambientLight = new THREE.AmbientLight(0xb3b388, 0.15); // soft white light
-    scene.add(ambientLight);
+    dirLight.shadow.mapSize.width = 2048;
+    dirLight.shadow.mapSize.height = 2048;
 
-    lightHelper1 = new THREE.SpotLightHelper(spotLight1);
-    lightHelper1.visible = false;
-    lightHelper2 = new THREE.SpotLightHelper(spotLight2);
-    lightHelper2.visible = false;
-    lightHelper3 = new THREE.SpotLightHelper(spotLight3);
-    lightHelper3.visible = false;
+    const d = 50;
 
-    spotLight1.castShadow = true;
-    spotLight2.castShadow = true;
-    spotLight3.castShadow = true;
+    dirLight.shadow.camera.left = - d;
+    dirLight.shadow.camera.right = d;
+    dirLight.shadow.camera.top = d;
+    dirLight.shadow.camera.bottom = - d;
 
-    scene.add(spotLight1, spotLight2, spotLight3);
-    scene.add(lightHelper1, lightHelper2, lightHelper3);
+    dirLight.shadow.camera.far = 3500;
+    dirLight.shadow.bias = - 0.0001;
+
+    const dirLightHelper = new THREE.DirectionalLightHelper( dirLight, 10 );
+    scene.add( dirLightHelper );
 }
 
 function initWorld() {
 
     createModel('./modelos/Town/', 'Level.mtl', 'Level.obj', 'world');
-    createModel('./modelos/Car/', 'Cartoon_Lowpoly_Car.mtl', 'Cartoon_Lowpoly_Car.obj', 'player');
+    // createModel('./modelos/Car/', 'Cartoon_Lowpoly_Car.mtl', 'Cartoon_Lowpoly_Car.obj', 'player');
 
     // floor
     var floorGeometry = new THREE.PlaneBufferGeometry(2000, 2000, 100, 100);
     floorGeometry.rotateX(-Math.PI / 2);
     floorGeometry = floorGeometry.toNonIndexed(); // ensure each face has unique vertices
 
-    var floorMaterial = new THREE.MeshBasicMaterial({ color: 0x2825FF });
+    var floorMaterial = new THREE.MeshBasicMaterial({ color: 0x383535 });
     var floor = new THREE.Mesh(floorGeometry, floorMaterial);
     scene.add(floor);
 }
@@ -258,13 +240,13 @@ function movePlayer() {
     if (input.right == 1) {
         //camera.rotation.y -= rotSpd;
         MovingCube.rotation.y -= rotSpd;
-        player.rotation.y -= rotSpd;
+        // player.rotation.y -= rotSpd;
         // modelPlay.rotation.y  -= rotSpd;
     }
     if (input.left == 1) {
         //camera.rotation.y += rotSpd;
         MovingCube.rotation.y += rotSpd;
-        player.rotation.y += rotSpd;
+        // player.rotation.y += rotSpd;
         // modelPlay.rotation.y  += rotSpd;
     }
 
@@ -425,38 +407,38 @@ function createPlayerMove() {
     scene.add(MovingCube);
 }
 
-function collisionAnimate() {
+// function collisionAnimate() {
 
-    var originPoint = MovingCube.position.clone();
+//     var originPoint = MovingCube.position.clone();
 
-    for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++) {
-        var localVertex = MovingCube.geometry.vertices[vertexIndex].clone();
-        var globalVertex = localVertex.applyMatrix4(MovingCube.matrix);
-        var directionVector = globalVertex.sub(MovingCube.position);
+//     for (var vertexIndex = 0; vertexIndex < MovingCube.geometry.vertices.length; vertexIndex++) {
+//         var localVertex = MovingCube.geometry.vertices[vertexIndex].clone();
+//         var globalVertex = localVertex.applyMatrix4(MovingCube.matrix);
+//         var directionVector = globalVertex.sub(MovingCube.position);
 
-        var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
-        var collisionResults = ray.intersectObjects(collidableMeshList);
-        var collisionRCollect = ray.intersectObjects(collectibleMeshList);
+//         var ray = new THREE.Raycaster(originPoint, directionVector.clone().normalize());
+//         var collisionResults = ray.intersectObjects(collidableMeshList);
+//         var collisionRCollect = ray.intersectObjects(collectibleMeshList);
 
-        if (collisionRCollect.length > 0 && collisionRCollect[0].distance < directionVector.length()) {
-            document.getElementById("points").innerHTML = points;
-            var toErase = scene.getObjectByName('drop'+collisionRCollect[0].object.name);
-            toErase.visible = false;
-            collisionRCollect[0].object.visible = false;
-            playAudio(pick);
-            points += 1;
-            if(points == 7){
-                document.getElementById("win").style.display = "block";
-                pauseAudio(song);
-                playAudio(wins);
-                gamewon=true;
-            }
-            i += 20;
-        } else {
-            document.getElementById("points").innerHTML = points;
-        }
-    }
-}
+//         if (collisionRCollect.length > 0 && collisionRCollect[0].distance < directionVector.length()) {
+//             document.getElementById("points").innerHTML = points;
+//             var toErase = scene.getObjectByName('drop'+collisionRCollect[0].object.name);
+//             toErase.visible = false;
+//             collisionRCollect[0].object.visible = false;
+//             playAudio(pick);
+//             points += 1;
+//             if(points == 7){
+//                 document.getElementById("win").style.display = "block";
+//                 pauseAudio(song);
+//                 playAudio(wins);
+//                 gamewon=true;
+//             }
+//             i += 20;
+//         } else {
+//             document.getElementById("points").innerHTML = points;
+//         }
+//     }
+// }
 
 var i = 100;
 
@@ -487,12 +469,12 @@ function fuelInteractions() {
 
 }
 
-function autoRefreshTip() {
-    var pos = getRandomArbitrary(0, 3);
-    document.getElementById("tips").innerHTML = tips[pos];
+// function autoRefreshTip() {
+//     var pos = getRandomArbitrary(0, 3);
+//     document.getElementById("tips").innerHTML = tips[pos];
 
-}
-setInterval(autoRefreshTip, interval); // Time is set in milliseconds
-function getRandomArbitrary(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
-}
+// }
+// setInterval(autoRefreshTip, interval); // Time is set in milliseconds
+// function getRandomArbitrary(min, max) {
+//     return Math.floor(Math.random() * (max - min)) + min;
+// }
