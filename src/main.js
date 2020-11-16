@@ -7,7 +7,8 @@ var scene = null,
     controls = null,
     clock = null,
     ambientLight=null,
-    interval = 5000;
+    interval = 5000,
+    container;
 
 var sound1 = null,
     countPoints = null,
@@ -58,9 +59,9 @@ function start() {
 }
 
 function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.aspect = (window.innerWidth-100) / (window.innerHeight-100);
     camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth-100,window.innerHeight-100);
 }
 
 function initScene() {
@@ -83,16 +84,21 @@ function animate() {
 }
 
 function initBasicElements() {
+    container = document.getElementById( 'canvas' );
+    console.log(container);
+    document.body.appendChild( container );
+
     scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    renderer = new THREE.WebGLRenderer({ canvas: document.querySelector("#app") });
+    camera = new THREE.PerspectiveCamera(75, (window.innerWidth-100) / (window.innerHeight-100), 0.1, 1000);
+    renderer = new THREE.WebGLRenderer();
+    // renderer.setSize( parseInt(container.style.width), parseInt(container.style.height) );
+    renderer.setSize(window.innerWidth-100,window.innerHeight-100);
+    container.appendChild( renderer.domElement );
     clock = new THREE.Clock();
 
     scene.background = new THREE.Color(0xdfdfdf);;
     scene.fog = new THREE.Fog(0xffffff, 0, 750);
 
-    renderer.setSize(window.innerWidth, window.innerHeight - 4);
-    document.body.appendChild(renderer.domElement);
 
     camera.position.x = 3;
     camera.position.y = 0.5;
