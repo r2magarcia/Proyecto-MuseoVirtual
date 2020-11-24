@@ -22,9 +22,15 @@
 
     <div class="grid-container">
 
+        <div class="infoButton">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+        </div>
+
         <div id="myCarousel" class="carousel slide" data-ride="carousel">
             <div class="carousel-inner">
-              <div class="carousel-item active">
+              <div class="carousel-item active" id="Calima">
                 <div class="cardContainer">
                     <div class="card">
                         <img src="./img/orocalima2.jpg" class="card-img-top" alt="...">
@@ -35,7 +41,7 @@
                     </div>
                 </div>
               </div>
-              <div class="carousel-item">
+              <div class="carousel-item" id="Muisca">
                 <div class="cardContainer">
                     <div class="card">
                         <img src="./img/orocalima.jpg" class="card-img-top" alt="...">
@@ -46,7 +52,7 @@
                     </div>
                 </div>
               </div>
-              <div class="carousel-item">
+              <div class="carousel-item" id="Tairona">
                 <div class="cardContainer">
                     <div class="card">
                         <img src="./img/collararo.png" class="card-img-top" alt="...">
@@ -68,9 +74,19 @@
             </a>
         </div>
 
+        <div class="speechBubble" id="bubble">
+            Bienvenido al proyecto museo virtual
+        </div>
+
         <div class="image">
             <img src="./img/indigena.png" id="ind" alt="">
         </div>
+
+        <div class="alert alert-info" id="alerta">
+            <a class="close">&times;</a>
+            <strong>Proyecto Mueso Virtual:</strong> <br>María Alejandra García <br> Camilo Rojas <br> Santiago Rodríguez
+        </div>
+
     </div>
 
     <!-- Optional JavaScript -->
@@ -81,7 +97,9 @@
 
     <script>
         // Activate Carousel
-        $("#myCarousel").carousel();
+        $("#myCarousel").carousel({
+            interval: 5000
+        });
 
         // Enable Carousel Indicators
         $(".item").click(function(){
@@ -95,6 +113,33 @@
 
         $(".carousel-control-next").click(function(){
             $("#myCarousel").carousel("next");
+            console.log(document.getElementsByClassName('active'));
+        });
+
+        $('#myCarousel').on('slide.bs.carousel', function onSlide (ev) {
+            var id = ev.relatedTarget.id;
+            // console.log("Alooooooooooooooooooo"+id);
+            switch (id) {
+              case "Muisca":
+                document.getElementById('bubble').innerText = "Los Muiscasasasasjilidhuef qwkdjbfkjqb hk bkj bk bhj bj kjvgfvtukvkug uy yjkhb l builbibyjl jlvgj vgvhgv jbj bunnknukbyiv llyigyvuvut";
+                break;
+              case "Tairona":
+                document.getElementById('bubble').innerText = "Los Taironassasasjilidhuef qwkdjbfkjqb hk bkj bk bhj bj kjvgfvtukvkug uy yjkhb l builbibyjl jlvgj vgvhgv jbj bunnknukbyiv llyigyvuvut";
+                break;
+              case "Calima":
+                document.getElementById('bubble').innerText = "Los Calimassasasjilidhuef qwkdjbfkjqb hk bkj bk bhj bj kjvgfvtukvkug uy yjkhb l builbibyjl jlvgj vgvhgv jbj bunnknukbyiv llyigyvuvut";
+                break;
+              default:
+                document.getElementById('bubble').innerText = "La cagamos";
+            }
+        })
+
+        $('.infoButton').click(function(){
+            document.getElementById("alerta").style.display = "inline-block"; 
+        });
+
+        $('.close').click(function(){
+            document.getElementById("alerta").style.display = "none";
         });
     </script>
 </body>
